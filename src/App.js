@@ -2,22 +2,12 @@ import { useState } from 'react'
 import AddTask from './components/AddTask'
 import Control from './components/Control'
 import TaskList from './components/TaskList'
+import { createTask } from './services/listToDo'
 
 function App() {
   const [isDisplayForm, setIsDisplayForm] = useState(false)
   const [title, setTitle] = useState('')
-  const [tasks, setTasks] = useState([])
-
-  const data = JSON.parse(localStorage.getItem('tasks'))
-
-  const s4 = () => {
-    return Math.floor((1 + Math.random()) * 0x10000)
-      .toString(16)
-      .substring(1)
-  }
-  const generateID = () => {
-    return s4() + s4() + '_' + s4() + s4() + '_' + s4() + s4()
-  }
+  const [data, setData] = useState([])
 
   const newTask = (value) => {
     setIsDisplayForm(true)
@@ -29,15 +19,12 @@ function App() {
   }
 
   const onSubmit = (value) => {
-    let newTasks = [...tasks]
-    if (value.id === '') {
-      value.id = generateID()
-      newTasks.push(value)
-    } else {
-      console.log('findIndex')
-    }
-    setTasks(newTasks)
-    localStorage.setItem('tasks', JSON.stringify(newTasks))
+    let newTasks = [...data]
+    newTasks.push(value)
+    setData(newTasks)
+    createTask(newTasks)
+      .then((res) => res.data)
+      .catch((err) => console.log('Có vấn đề xảy ra'))
   }
 
   return (
