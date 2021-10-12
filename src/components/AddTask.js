@@ -1,17 +1,18 @@
 import React from 'react'
 
-function AddTask() {
+function AddTask(props) {
   return (
     <div className='w-full'>
       <form className='bg-white items-center rounded-lg border border-green-400'>
         <h2 className=' bg-green-400 text-white text-xl font-normal py-2 relative rounded-t-lg'>
-          Thêm công việc
+          {props.title === 'add' ? 'Thêm công việc' : 'Cập nhật công việc'}
           <svg
             xmlns='http://www.w3.org/2000/svg'
             className='h-6 w-6 absolute top-2.5 right-4 cursor-pointer hover:text-red-300'
             fill='none'
             viewBox='0 0 24 24'
             stroke='currentColor'
+            onClick={() => props.closeForm()}
           >
             <path
               strokeLinecap='round'
@@ -41,7 +42,7 @@ function AddTask() {
             className='bg-green-300 px-8 py-2 rounded-md border border-blue-400 hover:bg-green-400'
             type='submit'
           >
-            Thêm mới
+            {props.title === 'add' ? 'Thêm mới' : 'Cập nhật'}
           </button>
           <button
             className='bg-red-400 px-8 py-2 rounded-md border border-purple-400 hover:bg-red-500'

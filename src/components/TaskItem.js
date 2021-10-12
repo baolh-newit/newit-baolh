@@ -1,6 +1,6 @@
 import React from 'react'
 
-function TaskItem() {
+function TaskItem(props) {
   return (
     <tr className='w-full font-light text-gray-700 bg-gray-100 whitespace-no-wrap border border-b-0'>
       <td className='px-4 py-4'>1</td>
@@ -13,6 +13,7 @@ function TaskItem() {
       <td className='text-center px-3 py-4 flex gap-5'>
         <a href='#'>
           <svg
+            onClick={() => props.onShowForm('edit')}
             xmlns='http://www.w3.org/2000/svg'
             className='h-6 w-6 text-green-400'
             fill='none'

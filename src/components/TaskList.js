@@ -1,7 +1,7 @@
 import React from 'react'
 import TaskItem from './TaskItem'
 
-function TaskList() {
+function TaskList(props) {
   return (
     <div className='bg-white rounded-lg py-6'>
       <div className='block overflow-x-auto mx-6'>
@@ -33,7 +33,7 @@ function TaskList() {
               </td>
               <td className='px-4 py-4' />
             </tr>
-            <TaskItem />
+            <TaskItem onShowForm={(value) => props.onShowForm(value)} />
           </tbody>
         </table>
       </div>
