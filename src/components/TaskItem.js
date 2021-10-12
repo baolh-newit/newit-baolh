@@ -1,11 +1,27 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useState } from 'react/cjs/react.development'
+import { getList } from '../services/listToDo'
 
 function TaskItem(props) {
-  const list = props.data
+  const [listData, setListData] = useState()
+
+  useEffect(() => {
+    let mounted = true
+    getList()
+      .then((data) => {
+        if (mounted) {
+          setListData(data)
+        }
+      })
+      .catch((err) => console.log('Có vấn đề xảy ra rồi:', err))
+
+    return () => (mounted = false)
+  }, [])
+
   return (
     <>
-      {list &&
-        list.map((item, index) => {
+      {listData &&
+        listData.map((item, index) => {
           return (
             <tr
               key={index}
