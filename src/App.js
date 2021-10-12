@@ -6,6 +6,18 @@ import TaskList from './components/TaskList'
 function App() {
   const [isDisplayForm, setIsDisplayForm] = useState(false)
   const [title, setTitle] = useState('')
+  const [tasks, setTasks] = useState([])
+
+  const data = JSON.parse(localStorage.getItem('tasks'))
+
+  const s4 = () => {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1)
+  }
+  const generateID = () => {
+    return s4() + s4() + '_' + s4() + s4() + '_' + s4() + s4()
+  }
 
   const newTask = (value) => {
     setIsDisplayForm(true)
@@ -16,6 +28,18 @@ function App() {
     setTitle(value)
   }
 
+  const onSubmit = (value) => {
+    let newTasks = [...tasks]
+    if (value.id === '') {
+      value.id = generateID()
+      newTasks.push(value)
+    } else {
+      console.log('findIndex')
+    }
+    setTasks(newTasks)
+    localStorage.setItem('tasks', JSON.stringify(newTasks))
+  }
+
   return (
     <div className='container mx-auto'>
       <h1 className='text-4xl text-center font-semibold py-4 border-b-2'>
@@ -24,7 +48,11 @@ function App() {
       <div className='grid grid-cols-12 gap-x-10 m-4'>
         <div className='text-center col-start-1 col-end-5'>
           {isDisplayForm === true ? (
-            <AddTask closeForm={() => setIsDisplayForm(false)} title={title} />
+            <AddTask
+              closeForm={() => setIsDisplayForm(false)}
+              title={title}
+              onSubmit={(value) => onSubmit(value)}
+            />
           ) : (
             ''
           )}
@@ -47,7 +75,7 @@ function App() {
           <div className=' flex justify-start items-center mx-6 mt-4 relative '>
             <Control />
           </div>
-          <TaskList onShowForm={(value) => onShowForm(value)} />
+          <TaskList onShowForm={(value) => onShowForm(value)} data={data} />
         </div>
       </div>
     </div>

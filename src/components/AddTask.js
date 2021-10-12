@@ -1,9 +1,41 @@
 import React from 'react'
+import { useState } from 'react/cjs/react.development'
 
 function AddTask(props) {
+  const [inputValues, setInputValues] = useState({
+    id: '',
+    name: '',
+    status: false,
+  })
+
+  const onChange = (event) => {
+    let { name, value } = event.target
+
+    if (name === 'status') {
+      value = event.target.value === 'true' ? true : false
+    } else {
+      value = event.target.value
+    }
+    setInputValues((prevState) => ({ ...prevState, [name]: value }))
+  }
+
+  const onClear = () => {
+    setInputValues({ ...inputValues, name: '', status: false })
+  }
+
+  const handleOnSubmit = (e) => {
+    e.preventDefault()
+    onClear()
+    props.closeForm()
+    props.onSubmit({ ...inputValues })
+  }
+
   return (
     <div className='w-full'>
-      <form className='bg-white items-center rounded-lg border border-green-400'>
+      <form
+        onSubmit={handleOnSubmit}
+        className='bg-white items-center rounded-lg border border-green-400'
+      >
         <h2 className=' bg-green-400 text-white text-xl font-normal py-2 relative rounded-t-lg'>
           {props.title === 'add' ? 'Thêm công việc' : 'Cập nhật công việc'}
           <svg
@@ -25,16 +57,24 @@ function AddTask(props) {
         <div className='py-3 px-5'>
           <label className='block text-left pb-2'>Tên</label>
           <input
+            name='name'
+            value={inputValues.name}
             className=' py-1.5 w-full bg-gray-100 px-4 outline-none'
             type='text'
             placeholder='Nhập tên công việc'
+            onChange={onChange}
           />
         </div>
         <div className='py-3 px-5 text-left'>
           <label className=' block pb-2'>Trạng thái</label>
-          <select className='block w-full bg-gray-100 py-1.5 px-4 outline-none '>
-            <option value>Kích hoạt</option>
-            <option value>Ẩn</option>
+          <select
+            name='status'
+            value={inputValues.status}
+            onChange={onChange}
+            className='block w-full bg-gray-100 py-1.5 px-4 outline-none '
+          >
+            <option value='true'>Kích hoạt</option>
+            <option value='false'>Ẩn</option>
           </select>
         </div>
         <div className='flex justify-around py-4'>
@@ -46,7 +86,8 @@ function AddTask(props) {
           </button>
           <button
             className='bg-red-400 px-8 py-2 rounded-md border border-purple-400 hover:bg-red-500'
-            type='submit'
+            type='button'
+            onClick={onClear}
           >
             Xoá dữ liệu
           </button>
