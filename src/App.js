@@ -1,32 +1,85 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AddTask from './components/AddTask'
 import Control from './components/Control'
 import TaskList from './components/TaskList'
-import { createTask } from './services/listToDo'
+import {
+  createTask,
+  deleteTask,
+  getList,
+  updateTask,
+} from './services/listToDo'
 
 function App() {
   const [isDisplayForm, setIsDisplayForm] = useState(false)
   const [title, setTitle] = useState('')
-  const [data, setData] = useState([])
+  const [data, setData] = useState()
+  const [editTask, setEditTask] = useState(null)
 
   const newTask = (value) => {
     setIsDisplayForm(true)
     setTitle(value)
+    setEditTask(null)
   }
   const onShowForm = (value) => {
     setIsDisplayForm(true)
     setTitle(value)
   }
 
+  useEffect(() => {
+    let mounted = true
+    getList()
+      .then((items) => {
+        if (mounted) {
+          setData(items)
+        }
+      })
+      .catch((err) => console.log(err))
+    return () => (mounted = false)
+  }, [])
+
   const onSubmit = (value) => {
     let newTasks = [...data]
-    newTasks.push(value)
-    setData(newTasks)
-    createTask(newTasks)
-      .then((res) => res.data)
-      .catch((err) => console.log('Có vấn đề xảy ra'))
+    if (value.id === '') {
+      newTasks.push(value)
+      setData(newTasks)
+      createTask(value).catch((err) => console.log('Có vấn đề xảy ra', err))
+    } else {
+      const index = findIndex(value.id)
+      newTasks[index] = value
+      setData(newTasks)
+      updateTask(value).catch((err) => console.log('Có vấn đề xảy ra', err))
+    }
   }
 
+  // tìm index của task
+  const findIndex = (id) => {
+    const tasks = [...data]
+    let result = -1
+    tasks.forEach((task, index) => {
+      if (task.id === id) {
+        result = index
+      }
+    })
+    return result
+  }
+
+  const onDelete = (id) => {
+    let tasks = [...data]
+    const index = findIndex(id)
+    if (index !== -1) {
+      tasks.splice(index, 1)
+      setData(tasks)
+    }
+    setIsDisplayForm(false)
+    setEditTask(null)
+    deleteTask(id)
+  }
+  const onUpdate = (id) => {
+    let tasks = [...data]
+    const index = findIndex(id)
+    const editTask = tasks[index]
+    setEditTask(editTask)
+  }
   return (
     <div className='container mx-auto'>
       <h1 className='text-4xl text-center font-semibold py-4 border-b-2'>
@@ -39,6 +92,7 @@ function App() {
               closeForm={() => setIsDisplayForm(false)}
               title={title}
               onSubmit={(value) => onSubmit(value)}
+              editTask={editTask}
             />
           ) : (
             ''
@@ -62,7 +116,12 @@ function App() {
           <div className=' flex justify-start items-center mx-6 mt-4 relative '>
             <Control />
           </div>
-          <TaskList onShowForm={(value) => onShowForm(value)} data={data} />
+          <TaskList
+            onShowForm={(value) => onShowForm(value)}
+            data={data}
+            onDelete={onDelete}
+            onUpdate={onUpdate}
+          />
         </div>
       </div>
     </div>

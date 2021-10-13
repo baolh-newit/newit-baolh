@@ -1,27 +1,19 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react/cjs/react.development'
-import { getList } from '../services/listToDo'
+import React from 'react'
 
 function TaskItem(props) {
-  const [listData, setListData] = useState()
+  const { data } = props
 
-  useEffect(() => {
-    let mounted = true
-    getList()
-      .then((data) => {
-        if (mounted) {
-          setListData(data)
-        }
-      })
-      .catch((err) => console.log('Có vấn đề xảy ra rồi:', err))
-
-    return () => (mounted = false)
-  }, [])
-
+  const onDelete = (id) => {
+    props.onDelete(id)
+  }
+  const onUpdate = (id) => {
+    props.onShowForm('edit')
+    props.onUpdate(id)
+  }
   return (
     <>
-      {listData &&
-        listData.map((item, index) => {
+      {data &&
+        data.map((item, index) => {
           return (
             <tr
               key={index}
@@ -41,9 +33,9 @@ function TaskItem(props) {
                 </span>
               </td>
               <td className='text-center px-3 py-4 flex gap-5'>
-                <a href='#'>
+                <button>
                   <svg
-                    onClick={() => props.onShowForm('edit')}
+                    onClick={() => onUpdate(item.id)}
                     xmlns='http://www.w3.org/2000/svg'
                     className='h-6 w-6 text-green-400'
                     fill='none'
@@ -57,9 +49,10 @@ function TaskItem(props) {
                       d='M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z'
                     />
                   </svg>
-                </a>
-                <a href='#'>
+                </button>
+                <button>
                   <svg
+                    onClick={() => onDelete(item.id)}
                     xmlns='http://www.w3.org/2000/svg'
                     className='h-6 w-6 text-red-400'
                     fill='none'
@@ -73,7 +66,7 @@ function TaskItem(props) {
                       d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
                     />
                   </svg>
-                </a>
+                </button>
               </td>
             </tr>
           )

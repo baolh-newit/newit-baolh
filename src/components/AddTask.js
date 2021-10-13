@@ -1,5 +1,5 @@
-import React from 'react'
-import { useState } from 'react/cjs/react.development'
+import React, { useCallback } from 'react'
+import { useState, useEffect } from 'react/cjs/react.development'
 
 function AddTask(props) {
   const [inputValues, setInputValues] = useState({
@@ -7,6 +7,24 @@ function AddTask(props) {
     name: '',
     status: false,
   })
+
+  const task = props.editTask
+
+  const setInput = useCallback(() => {
+    if (task) {
+      setInputValues({
+        id: task.id,
+        name: task.name,
+        status: task.status,
+      })
+    } else if (task === null) {
+      setInputValues({ id: '', name: '', status: false })
+    }
+  }, [task])
+
+  useEffect(() => {
+    setInput()
+  }, [setInput])
 
   const onChange = (event) => {
     let { name, value } = event.target
@@ -37,7 +55,7 @@ function AddTask(props) {
         className='bg-white items-center rounded-lg border border-green-400'
       >
         <h2 className=' bg-green-400 text-white text-xl font-normal py-2 relative rounded-t-lg'>
-          {props.title === 'add' ? 'Thêm công việc' : 'Cập nhật công việc'}
+          {inputValues.id === '' ? 'Thêm công việc' : 'Cập nhật công việc'}
           <svg
             xmlns='http://www.w3.org/2000/svg'
             className='h-6 w-6 absolute top-2.5 right-4 cursor-pointer hover:text-red-300'
@@ -87,7 +105,7 @@ function AddTask(props) {
           <button
             className='bg-red-400 px-8 py-2 rounded-md border border-purple-400 hover:bg-red-500'
             type='button'
-            onClick={onClear}
+            onClick={() => onClear()}
           >
             Xoá dữ liệu
           </button>
