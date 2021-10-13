@@ -34,8 +34,10 @@ function TaskList(props) {
               <td className='px-4 py-4' />
             </tr>
             <TaskItem
-              onShowForm={(value) => props.onShowForm(value)}
+              onShowForm={props.onShowForm}
               data={props.data}
+              onDelete={props.onDelete}
+              onUpdate={props.onUpdate}
             />
           </tbody>
         </table>
