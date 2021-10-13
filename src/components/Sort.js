@@ -1,10 +1,30 @@
 import React from 'react'
+import { useState } from 'react/cjs/react.development'
 
-function Sort() {
+function Sort(props) {
+  const [isSort, setIsSort] = useState(false)
+  const [inputSort, setInputSort] = useState({
+    by: 'name',
+    value: 1,
+    title: 'Sắp xếp',
+  })
+
+  const onShowSort = () => {
+    setIsSort(!isSort)
+  }
+  const onSort = (by, value, title) => {
+    setInputSort({ ...inputSort, by, value, title })
+    let sort = { by, value }
+    props.onSort(sort)
+  }
+
   return (
     <>
-      <button className='bg-green-300 px-6 py-1.5 ml-20  rounded-md text-white border border-white hover:bg-green-400 group-hover:block '>
-        Sắp xếp
+      <button
+        onClick={onShowSort}
+        className='bg-green-300 px-6 py-1.5 ml-20  rounded-md text-white border border-white hover:bg-green-400 group-hover:block '
+      >
+        {inputSort.title}
         <svg
           xmlns='http://www.w3.org/2000/svg'
           className='h-5 w-5 inline-block pl-1'
@@ -20,12 +40,56 @@ function Sort() {
           />
         </svg>
       </button>
-      <div className='absolute top-10 right-32 bg-green-100 border border-black-500 rounded-md cursor-pointer mr-2 group hidden'>
-        <div className='hover:bg-green-300 px-3'>Tên A-Z</div>
-        <div className='hover:bg-green-300 px-3'>Tên Z-A</div>
+      <div
+        onClick={() => setIsSort(false)}
+        className={
+          isSort
+            ? 'absolute top-10 right-96 bg-green-100 border border-black-500 rounded-md cursor-pointer mr-2 group'
+            : 'absolute top-10 right-96 bg-green-100 border border-black-500 rounded-md cursor-pointer mr-2 group hidden'
+        }
+      >
+        <div
+          onClick={() => onSort('name', 1, 'Tên A-Z')}
+          className={
+            inputSort.by === 'name' && inputSort.value === 1
+              ? 'bg-green-300  px-3'
+              : 'hover:bg-green-200 px-3'
+          }
+        >
+          Tên A-Z
+        </div>
+        <div
+          onClick={() => onSort('name', -1, 'Tên Z-A')}
+          className={
+            inputSort.by === 'name' && inputSort.value === -1
+              ? 'bg-green-300  px-3'
+              : 'hover:bg-green-200 px-3'
+          }
+        >
+          Tên Z-A
+        </div>
         <hr />
-        <div className='hover:bg-green-300 px-3'> Trạng Thái Kích Hoạt</div>
-        <div className='hover:bg-green-300 px-3s'>Trạng Thái Ẩn</div>
+        <div
+          onClick={() => onSort('status', 1, 'Trạng Thái Kích Hoạt')}
+          className={
+            inputSort.by === 'status' && inputSort.value === 1
+              ? 'bg-green-300  px-3'
+              : 'hover:bg-green-200 px-3'
+          }
+        >
+          {' '}
+          Trạng Thái Kích Hoạt
+        </div>
+        <div
+          onClick={() => onSort('status', -1, 'Trạng Thái Ẩn')}
+          className={
+            inputSort.by === 'status' && inputSort.value === -1
+              ? 'bg-green-300  px-3'
+              : 'hover:bg-green-200 px-3'
+          }
+        >
+          Trạng Thái Ẩn
+        </div>
       </div>
     </>
   )
