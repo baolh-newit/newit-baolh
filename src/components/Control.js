@@ -2,11 +2,11 @@ import React from 'react'
 import Search from './Search'
 import Sort from './Sort'
 
-function Control() {
+function Control(props) {
   return (
     <>
       <Search />
-      <Sort />
+      <Sort onSort={props.onSort} />
     </>
   )
 }

@@ -10,7 +10,6 @@ function TaskItem(props) {
     props.onShowForm('edit')
     props.onUpdate(id)
   }
-
   const onChangeStatus = (id) => {
     props.onChangeStatus(id)
   }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useCallback } from 'react/cjs/react.development'
 import AddTask from './components/AddTask'
 import Control from './components/Control'
 import TaskList from './components/TaskList'
@@ -14,6 +15,7 @@ function App() {
   const [title, setTitle] = useState('')
   const [data, setData] = useState()
   const [editTask, setEditTask] = useState(null)
+  const [, setSortTask] = useState()
 
   const newTask = (value) => {
     setIsDisplayForm(true)
@@ -87,6 +89,26 @@ function App() {
     setData(tasks)
     updateTask(tasks[index])
   }
+
+  const onSort = (sort) => {
+    setSortTask(sort)
+    if (sort.by === 'name') {
+      data.sort((a, b) => {
+        let result = a.name.localeCompare(b.name)
+        if (result === 1) {
+          return sort.value
+        } else if (result === -1) return -sort.value
+        else return 0
+      })
+    } else {
+      data.sort((a, b) => {
+        if (a.status < b.status) return sort.value
+        else if (a.status > b.status) return -sort.value
+        else return 0
+      })
+    }
+  }
+
   return (
     <div className='container mx-auto'>
       <h1 className='text-4xl text-center font-semibold py-4 border-b-2'>
@@ -121,7 +143,7 @@ function App() {
             </button>
           </div>
           <div className=' flex justify-start items-center mx-6 mt-4 relative '>
-            <Control />
+            <Control onSort={onSort} />
           </div>
           <TaskList
             onShowForm={(value) => onShowForm(value)}
