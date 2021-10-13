@@ -80,6 +80,13 @@ function App() {
     const editTask = tasks[index]
     setEditTask(editTask)
   }
+  const onChangeStatus = (id) => {
+    let tasks = [...data]
+    const index = findIndex(id)
+    tasks[index].status = !tasks[index].status
+    setData(tasks)
+    updateTask(tasks[index])
+  }
   return (
     <div className='container mx-auto'>
       <h1 className='text-4xl text-center font-semibold py-4 border-b-2'>
@@ -121,6 +128,7 @@ function App() {
             data={data}
             onDelete={onDelete}
             onUpdate={onUpdate}
+            onChangeStatus={onChangeStatus}
           />
         </div>
       </div>

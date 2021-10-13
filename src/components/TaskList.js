@@ -38,6 +38,7 @@ function TaskList(props) {
               data={props.data}
               onDelete={props.onDelete}
               onUpdate={props.onUpdate}
+              onChangeStatus={props.onChangeStatus}
             />
           </tbody>
         </table>

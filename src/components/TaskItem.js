@@ -10,6 +10,10 @@ function TaskItem(props) {
     props.onShowForm('edit')
     props.onUpdate(id)
   }
+
+  const onChangeStatus = (id) => {
+    props.onChangeStatus(id)
+  }
   return (
     <>
       {data &&
@@ -23,6 +27,7 @@ function TaskItem(props) {
               <td className='px-4 py-4'>{item.name}</td>
               <td className='px-4 py-4'>
                 <span
+                  onClick={() => onChangeStatus(item.id)}
                   className={
                     item.status === true
                       ? 'text-sm bg-green-500 text-white rounded-full px-2 py-1'
