@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useCallback } from 'react/cjs/react.development'
 import AddTask from './components/AddTask'
 import Control from './components/Control'
 import TaskList from './components/TaskList'
@@ -16,6 +15,8 @@ function App() {
   const [data, setData] = useState()
   const [editTask, setEditTask] = useState(null)
   const [, setSortTask] = useState()
+  const [filterItem, setFilterItem] = useState({ name: '', value: '' })
+  const [searchItem, setSearchItem] = useState('')
 
   const newTask = (value) => {
     setIsDisplayForm(true)
@@ -109,6 +110,46 @@ function App() {
     }
   }
 
+  const onSearch = (keyword) => {
+    let newData = [...data]
+    setSearchItem(newData)
+    console.log(keyword)
+    if (keyword === '') {
+      setData(newData)
+      console.log(data)
+    } else {
+      if (keyword) {
+        newData = newData.filter(
+          (value) =>
+            value.name.toLowerCase().indexOf(keyword.toLowerCase()) !== -1
+        )
+        setData(newData)
+      } else {
+        setData(searchItem)
+      }
+
+      console.log(data)
+    }
+  }
+
+  const onFilter = (filter) => {
+    setFilterItem(data)
+    if (filter.value !== '') {
+      if (filter.name === 'filterName') {
+        let newData = data.filter((task) => {
+          return (
+            task.name.toLowerCase().indexOf(filter.value.toLowerCase()) !== -1
+          )
+        })
+        setData(newData)
+      } else {
+        console.log('a')
+      }
+    } else {
+      setData(filterItem)
+    }
+  }
+
   return (
     <div className='container mx-auto'>
       <h1 className='text-4xl text-center font-semibold py-4 border-b-2'>
@@ -143,7 +184,7 @@ function App() {
             </button>
           </div>
           <div className=' flex justify-start items-center mx-6 mt-4 relative '>
-            <Control onSort={onSort} />
+            <Control onSort={onSort} onSearch={onSearch} />
           </div>
           <TaskList
             onShowForm={(value) => onShowForm(value)}
@@ -151,6 +192,7 @@ function App() {
             onDelete={onDelete}
             onUpdate={onUpdate}
             onChangeStatus={onChangeStatus}
+            onFilter={onFilter}
           />
         </div>
       </div>

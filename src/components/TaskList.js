@@ -1,7 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import TaskItem from './TaskItem'
 
 function TaskList(props) {
+  const [inputFilter, setInputFilter] = useState({
+    filterName: '',
+    filterStatus: 'All',
+  })
+  const onChange = (event) => {
+    const { name, value } = event.target
+    setInputFilter({ [name]: value })
+    let filter = { name, value }
+    props.onFilter(filter)
+  }
+
   return (
     <div className='bg-white rounded-lg py-6'>
       <div className='block overflow-x-auto mx-6'>
@@ -19,16 +30,23 @@ function TaskList(props) {
               <td className='px-4 py-4' />
               <td className='px-4 py-4'>
                 <input
+                  name='filterName'
+                  value={inputFilter.filterName}
+                  onChange={onChange}
                   className=' py-1.5 w-full bg-white px-4 outline-none'
                   type='text'
                   placeholder='Nhập tên công việc cần tìm'
                 />
               </td>
               <td className='px-4 py-4'>
-                <select className='block w-full bg-white py-1.5 px-4 outline-none '>
-                  <option value>Tất cả</option>
-                  <option value>Kích hoạt</option>
-                  <option value>Ẩn</option>
+                <select
+                  onChange={onChange}
+                  name='filterStatus'
+                  className='block w-full bg-white py-1.5 px-4 outline-none '
+                >
+                  <option value='All'>Tất cả</option>
+                  <option value='Active'>Kích hoạt</option>
+                  <option value='Hide'>Ẩn</option>
                 </select>
               </td>
               <td className='px-4 py-4' />
@@ -39,6 +57,7 @@ function TaskList(props) {
               onDelete={props.onDelete}
               onUpdate={props.onUpdate}
               onChangeStatus={props.onChangeStatus}
+              onChange={onChange}
             />
           </tbody>
         </table>

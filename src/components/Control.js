@@ -5,7 +5,7 @@ import Sort from './Sort'
 function Control(props) {
   return (
     <>
-      <Search />
+      <Search onSearch={props.onSearch} />
       <Sort onSort={props.onSort} />
     </>
   )
